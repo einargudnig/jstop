@@ -65,11 +65,15 @@ class ProcessManager: ObservableObject {
                         guard parts.count >= 2,
                               let pid = Int(parts[0]) else { return nil }
 
-                        let comm = URL(fileURLWithPath: parts[1]).lastPathComponent
-                        guard targets.contains(comm) else { return nil }
+                        // comm (parts[1]) is truncated by macOS to ~15 chars — e.g. fnm-managed
+                        // node shows as "/Users/einargudj" instead of "node".
+                        // argv[0] in the args field (parts[2]) has the full executable path.
+                        let execBasename = URL(fileURLWithPath: parts.count >= 3 ? parts[2] : parts[1]).lastPathComponent
+                        let commBasename = URL(fileURLWithPath: parts[1]).lastPathComponent
+                        guard let name = [execBasename, commBasename].first(where: { targets.contains($0) }) else { return nil }
 
                         let args = parts.dropFirst(2).joined(separator: " ")
-                        return JSProcess(id: pid, pid: pid, name: comm, args: args)
+                        return JSProcess(id: pid, pid: pid, name: name, args: args)
                     }
 
                 continuation.resume(returning: found)
