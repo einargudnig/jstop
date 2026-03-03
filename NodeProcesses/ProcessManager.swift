@@ -22,47 +22,59 @@ class ProcessManager: ObservableObject {
     }
 
     func fetchProcesses() {
-        let task = Process()
-        task.executableURL = URL(fileURLWithPath: "/bin/ps")
-        // pid= comm= args= suppresses column headers; comm is the short process name
-        task.arguments = ["-axo", "pid=,comm=,args="]
-
-        let outPipe = Pipe()
-        let errPipe = Pipe()
-        task.standardOutput = outPipe
-        task.standardError = errPipe  // suppress stderr
-
-        do {
-            try task.run()
-            task.waitUntilExit()
-        } catch {
-            return  // ps unavailable — leave processes unchanged
+        Task {
+            let found = await Self.runPS(targets: targets)
+            self.processes = found
         }
+    }
 
-        let data = outPipe.fileHandleForReading.readDataToEndOfFile()
-        guard let output = String(data: data, encoding: .utf8) else { return }
+    private static func runPS(targets: Set<String>) async -> [JSProcess] {
+        await withCheckedContinuation { continuation in
+            DispatchQueue.global(qos: .utility).async {
+                let task = Process()
+                task.executableURL = URL(fileURLWithPath: "/bin/ps")
+                task.arguments = ["-axo", "pid=,comm=,args="]
 
-        let found: [JSProcess] = output
-            .components(separatedBy: "\n")
-            .compactMap { line in
-                let parts = line
-                    .trimmingCharacters(in: .whitespaces)
-                    .components(separatedBy: .whitespaces)
-                    .filter { !$0.isEmpty }
+                let outPipe = Pipe()
+                let errPipe = Pipe()
+                task.standardOutput = outPipe
+                task.standardError = errPipe
 
-                guard parts.count >= 2,
-                      let pid = Int(parts[0]) else { return nil }
+                do {
+                    try task.run()
+                    task.waitUntilExit()
+                } catch {
+                    continuation.resume(returning: [])
+                    return
+                }
 
-                // comm may be a full path on some systems — use basename
-                let comm = URL(fileURLWithPath: parts[1]).lastPathComponent
+                let data = outPipe.fileHandleForReading.readDataToEndOfFile()
+                guard let output = String(data: data, encoding: .utf8) else {
+                    continuation.resume(returning: [])
+                    return
+                }
 
-                guard targets.contains(comm) else { return nil }
+                let found: [JSProcess] = output
+                    .components(separatedBy: "\n")
+                    .compactMap { line in
+                        let parts = line
+                            .trimmingCharacters(in: .whitespaces)
+                            .components(separatedBy: .whitespaces)
+                            .filter { !$0.isEmpty }
 
-                let args = parts.dropFirst(2).joined(separator: " ")
-                return JSProcess(id: pid, pid: pid, name: comm, args: args)
+                        guard parts.count >= 2,
+                              let pid = Int(parts[0]) else { return nil }
+
+                        let comm = URL(fileURLWithPath: parts[1]).lastPathComponent
+                        guard targets.contains(comm) else { return nil }
+
+                        let args = parts.dropFirst(2).joined(separator: " ")
+                        return JSProcess(id: pid, pid: pid, name: comm, args: args)
+                    }
+
+                continuation.resume(returning: found)
             }
-
-        self.processes = found
+        }
     }
 
     func kill(pid: Int) {
