@@ -64,4 +64,15 @@ class ProcessManager: ObservableObject {
 
         self.processes = found
     }
+
+    func kill(pid: Int) {
+        // SIGTERM for graceful shutdown — dev servers handle cleanup on SIGTERM
+        // Do NOT use SIGKILL (9) as first signal — it prevents cleanup handlers from running
+        Darwin.kill(pid_t(pid), SIGTERM)
+
+        // Refresh after 0.5s — gives the process time to terminate
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.fetchProcesses()
+        }
+    }
 }
