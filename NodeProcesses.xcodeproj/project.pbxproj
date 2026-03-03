@@ -7,12 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		171A0B9648FDB9FF233FA8C1 /* ProcessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5EC296E5F2BB25D70EB582 /* ProcessManager.swift */; };
+		3598540A91A0146F0822DC3B /* ProcessListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5102516D835026DAC7D7ADF /* ProcessListView.swift */; };
+		66588CBDDA0DDD4BF72322DA /* JSProcess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438BDF941F7C61316CDCD313 /* JSProcess.swift */; };
+		7725BA4006857D8B5A6507BA /* ProcessRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00998500B56E3C4B168BD611 /* ProcessRowView.swift */; };
+		831DA0475E108EA651FA5594 /* NodeProcessesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4390CB96A3F9067D49D4BD54 /* NodeProcessesApp.swift */; };
 		8D71ACB4E11E58154B5D1B9C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F06B822CE098E63389B4145 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		00998500B56E3C4B168BD611 /* ProcessRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessRowView.swift; sourceTree = "<group>"; };
 		3F06B822CE098E63389B4145 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		438BDF941F7C61316CDCD313 /* JSProcess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSProcess.swift; sourceTree = "<group>"; };
+		4390CB96A3F9067D49D4BD54 /* NodeProcessesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeProcessesApp.swift; sourceTree = "<group>"; };
+		4C5EC296E5F2BB25D70EB582 /* ProcessManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessManager.swift; sourceTree = "<group>"; };
+		88F84210E4448E6FB78CE3B7 /* NodeProcesses.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NodeProcesses.entitlements; sourceTree = "<group>"; };
 		987CD2FB666DEFA9712DC8FA /* NodeProcesses.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NodeProcesses.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C5102516D835026DAC7D7ADF /* ProcessListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessListView.swift; sourceTree = "<group>"; };
+		D672AAEB90395E79646D84F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -20,6 +32,13 @@
 			isa = PBXGroup;
 			children = (
 				3F06B822CE098E63389B4145 /* Assets.xcassets */,
+				D672AAEB90395E79646D84F2 /* Info.plist */,
+				438BDF941F7C61316CDCD313 /* JSProcess.swift */,
+				88F84210E4448E6FB78CE3B7 /* NodeProcesses.entitlements */,
+				4390CB96A3F9067D49D4BD54 /* NodeProcessesApp.swift */,
+				C5102516D835026DAC7D7ADF /* ProcessListView.swift */,
+				4C5EC296E5F2BB25D70EB582 /* ProcessManager.swift */,
+				00998500B56E3C4B168BD611 /* ProcessRowView.swift */,
 			);
 			path = NodeProcesses;
 			sourceTree = "<group>";
@@ -105,6 +124,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66588CBDDA0DDD4BF72322DA /* JSProcess.swift in Sources */,
+				831DA0475E108EA651FA5594 /* NodeProcessesApp.swift in Sources */,
+				3598540A91A0146F0822DC3B /* ProcessListView.swift in Sources */,
+				171A0B9648FDB9FF233FA8C1 /* ProcessManager.swift in Sources */,
+				7725BA4006857D8B5A6507BA /* ProcessRowView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
