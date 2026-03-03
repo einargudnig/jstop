@@ -55,6 +55,6 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/2 | Not started | - |
+| 1. Foundation | 1/2 | In progress | - |
 | 2. Core Features | 0/3 | Not started | - |
 | 3. Polish | 0/2 | Not started | - |
