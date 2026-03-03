@@ -35,7 +35,7 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: Process discovery — enumerate node/bun/deno processes, poll every 2s, display in popover list with PID and command args
+- [x] 02-01: Process discovery — enumerate node/bun/deno processes, poll every 2s, display in popover list with PID and command args
 - [ ] 02-02: Kill action — kill selected process (SIGTERM then SIGKILL), refresh list after
 - [ ] 02-03: Port detection + browser open — detect listening ports per PID via lsof, show "Open in browser" button for processes with open ports
 
@@ -56,5 +56,5 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/2 | Complete | 2026-03-03 |
-| 2. Core Features | 0/3 | Not started | - |
+| 2. Core Features | 1/3 | In progress | - |
 | 3. Polish | 0/2 | Not started | - |
