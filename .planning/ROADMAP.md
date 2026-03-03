@@ -10,7 +10,7 @@ None
 
 ## Phases
 
-- [ ] **Phase 1: Foundation** - SwiftUI MenuBarExtra skeleton with app lifecycle and basic popover
+- [x] **Phase 1: Foundation** - SwiftUI MenuBarExtra skeleton with app lifecycle and basic popover
 - [ ] **Phase 2: Core Features** - Process discovery, kill action, port detection, open in browser
 - [ ] **Phase 3: Polish** - Manual port override, refresh controls, UX refinements
 
@@ -55,6 +55,6 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 1/2 | In progress | - |
+| 1. Foundation | 2/2 | Complete | 2026-03-03 |
 | 2. Core Features | 0/3 | Not started | - |
 | 3. Polish | 0/2 | Not started | - |
