@@ -1,6 +1,6 @@
-name: NodeProcesses
+name: jstop
 options:
-  bundleIdPrefix: com.nodeprocesses
+  bundleIdPrefix: com.jstop
   minimumXcodeVersion: "14.0"
   deploymentTarget:
     macOS: "13.0"
@@ -12,16 +12,16 @@ settings:
     ENABLE_HARDENED_RUNTIME: NO
 
 targets:
-  NodeProcesses:
+  jstop:
     type: application
     platform: macOS
     sources:
-      - NodeProcesses
+      - jstop
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.nodeprocesses.NodeProcesses
-        INFOPLIST_FILE: NodeProcesses/Info.plist
-        CODE_SIGN_ENTITLEMENTS: NodeProcesses/NodeProcesses.entitlements
+        PRODUCT_BUNDLE_IDENTIFIER: com.jstop.jstop
+        INFOPLIST_FILE: jstop/Info.plist
+        CODE_SIGN_ENTITLEMENTS: jstop/jstop.entitlements
         CODE_SIGN_IDENTITY: "-"
         CODE_SIGNING_REQUIRED: "NO"
         CODE_SIGNING_ALLOWED: "NO"

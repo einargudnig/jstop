@@ -22,7 +22,7 @@ struct ProcessListView: View {
         VStack(alignment: .leading, spacing: 0) {
             // ---- Header ----
             HStack {
-                Text("Node Processes")
+                Text("jstop")
                     .font(.headline)
                 Spacer()
                 if !manager.processes.isEmpty {
@@ -113,7 +113,7 @@ struct ProcessListView: View {
             Divider()
 
             // ---- Quit button ----
-            Button("Quit Node Processes") {
+            Button("Quit jstop") {
                 NSApplication.shared.terminate(nil)
             }
             .buttonStyle(.plain)

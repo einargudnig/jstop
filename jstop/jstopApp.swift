@@ -3,7 +3,7 @@ import SwiftUI
 // @main marks this as the app's entry point (like main() in other languages).
 // In SwiftUI, the App protocol defines the top-level structure of your app.
 @main
-struct NodeProcessesApp: App {
+struct jstopApp: App {
     init() {
         // MenuBarExtra's content closure is lazy — it only runs when you click
         // the menu bar icon. We access the shared ProcessManager here to force
