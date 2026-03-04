@@ -14,8 +14,8 @@ struct ProcessRowView: View {
             VStack(alignment: .leading, spacing: 2) {
                 // Top row: runtime name + PID badge + port badges.
                 HStack(spacing: 6) {
-                    // Runtime name (e.g. "node") in monospaced bold.
-                    Text(process.name)
+                    // Framework or runtime name (e.g. "Next.js", "node").
+                    Text(process.framework)
                         .font(.system(.body, design: .monospaced))
                         .fontWeight(.semibold)
 

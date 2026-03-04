@@ -94,9 +94,11 @@ class ProcessManager: ObservableObject {
                 task.executableURL = URL(fileURLWithPath: "/bin/ps")
                 // -a: all users, -x: include processes without a terminal,
                 // -o: custom output format. The "=" suffix removes the column header.
-                // We get: PID, ETIME (elapsed time), COMM (executable path, truncated),
+                // We get: PID, PPID (parent), ETIME (elapsed time), COMM (executable path, truncated),
                 // ARGS (full command line).
-                task.arguments = ["-axo", "pid=,etime=,comm=,args="]
+                // PPID is needed to propagate listening ports from child processes
+                // (e.g. `bun dev` spawns `node` which spawns `next-server` that owns the port).
+                task.arguments = ["-axo", "pid=,ppid=,etime=,comm=,args="]
 
                 // Pipe captures the command's stdout so we can read it.
                 let outPipe = Pipe()
@@ -123,53 +125,151 @@ class ProcessManager: ObservableObject {
                     return
                 }
 
-                // --- Step 2: Parse ps output to find node/bun/deno processes ---
+                // --- Step 2: Parse ps output ---
+                //
+                // We need two things from the full process list:
+                // 1. Target processes (node/bun/deno) — what we show to the user
+                // 2. A parent→children map for ALL processes — so we can propagate
+                //    listening ports from child processes up to their detected parents
+                //
+                // Example: `bun dev` spawns `node .../next dev` which spawns
+                // `next-server` that owns port 3000. Without propagation, bun shows
+                // as "Background" because it doesn't directly own any ports.
 
-                // Each line looks like: "  12345    5:03 /usr/bin/node  node /path/to/server.js"
-                // Fields: PID, ETIME (elapsed time), COMM, ARGS...
-                var entries: [(pid: Int, name: String, args: String, uptime: TimeInterval)] = []
+                // Each line looks like: "  12345  12000    5:03 /usr/bin/node  node /path/to/server.js"
+                // Fields: PID, PPID, ETIME (elapsed time), COMM, ARGS...
+                var entries: [(pid: Int, ppid: Int, name: String, args: String, uptime: TimeInterval)] = []
+                var childrenOf: [Int: [Int]] = [:]  // ppid → [child pids] for ALL processes
+                var ppidOf: [Int: Int] = [:]         // pid → ppid for ALL processes
+                var argsOf: [Int: String] = [:]      // pid → args for ALL processes (for framework detection in subtrees)
+
                 for line in output.components(separatedBy: "\n") {
                     let parts = line
                         .trimmingCharacters(in: .whitespaces)
                         .components(separatedBy: .whitespaces)
                         .filter { !$0.isEmpty }
 
-                    // parts[0] = PID, parts[1] = ETIME, parts[2] = COMM, parts[3..] = ARGS
-                    guard parts.count >= 3,
-                          let pid = Int(parts[0]) else { continue }
+                    // parts[0] = PID, parts[1] = PPID, parts[2] = ETIME, parts[3] = COMM, parts[4..] = ARGS
+                    guard parts.count >= 4,
+                          let pid = Int(parts[0]),
+                          let ppid = Int(parts[1]) else { continue }
+
+                    // Build parent↔child maps for every process on the system.
+                    childrenOf[ppid, default: []].append(pid)
+                    ppidOf[pid] = ppid
+                    argsOf[pid] = parts.dropFirst(4).joined(separator: " ")
 
                     // Parse elapsed time from ps. Format is [[DD-]HH:]MM:SS.
-                    let uptime = parseEtime(parts[1])
+                    let uptime = parseEtime(parts[2])
 
                     // macOS truncates the COMM field to ~15 chars, so a node binary
                     // managed by fnm at "/Users/me/.local/state/fnm_multishells/.../bin/node"
                     // shows up as "/Users/me/.loca" in COMM — useless for matching.
                     //
-                    // Instead we also check argv[0] from the ARGS field (parts[3]),
+                    // Instead we also check argv[0] from the ARGS field (parts[4]),
                     // which has the full untruncated path. We extract the filename
                     // (basename) from both and see if either matches our targets.
                     //
                     // Uses simple string slicing instead of creating URL objects —
                     // this runs for every process on the system, so it matters.
-                    let execBasename = basename(parts.count >= 4 ? parts[3] : parts[2])
-                    let commBasename = basename(parts[2])
+                    let execBasename = basename(parts.count >= 5 ? parts[4] : parts[3])
+                    let commBasename = basename(parts[3])
                     guard let name = [execBasename, commBasename].first(where: { targets.contains($0) }) else { continue }
 
-                    // Everything after PID, ETIME, and COMM is the full command line.
-                    let args = parts.dropFirst(3).joined(separator: " ")
-                    entries.append((pid: pid, name: name, args: args, uptime: uptime))
+                    // Everything after PID, PPID, ETIME, and COMM is the full command line.
+                    let args = parts.dropFirst(4).joined(separator: " ")
+                    entries.append((pid: pid, ppid: ppid, name: name, args: args, uptime: uptime))
                 }
 
                 // --- Step 3: Get listening ports for the discovered processes ---
+                //
+                // We pass ALL PIDs (not just targets) so we can find ports owned
+                // by non-target child processes (like next-server spawned by bun).
+                // fetchListeningPorts already scans all TCP listeners, so this
+                // just means we don't filter the results down too early.
 
-                let portMap = fetchListeningPorts(pids: entries.map(\.pid))
+                let portMap = fetchListeningPorts()
+
+                // --- Step 3b: Propagate child ports up to target ancestors ---
+                //
+                // Walk each target's descendant tree and collect any ports owned
+                // by descendants. This handles chains like:
+                //   bun dev → node next dev → next-server (owns :3000)
+                // The bun process inherits port 3000 from its grandchild.
+
+                let targetPids = Set(entries.map(\.pid))
+                var effectivePorts: [Int: Set<UInt16>] = [:]
+
+                // Initialize with directly owned ports.
+                for entry in entries {
+                    if let ports = portMap[entry.pid] {
+                        effectivePorts[entry.pid] = Set(ports)
+                    }
+                }
+
+                // Collect all ports and args from the entire descendant subtree of a PID.
+                // Args are collected so we can detect frameworks in child processes
+                // (e.g. `bun dev` spawns `node .../next dev` — "next" is in the child's args).
+                func descendantInfo(of pid: Int) -> (ports: Set<UInt16>, args: [String]) {
+                    var ports = Set<UInt16>()
+                    var args: [String] = []
+                    guard let children = childrenOf[pid] else { return (ports, args) }
+                    for child in children {
+                        if let childPorts = portMap[child] {
+                            ports.formUnion(childPorts)
+                        }
+                        if let childArgs = argsOf[child], !childArgs.isEmpty {
+                            args.append(childArgs)
+                        }
+                        let sub = descendantInfo(of: child)
+                        ports.formUnion(sub.ports)
+                        args.append(contentsOf: sub.args)
+                    }
+                    return (ports, args)
+                }
+
+                var descendantArgsByPid: [Int: [String]] = [:]
+                for entry in entries {
+                    let info = descendantInfo(of: entry.pid)
+                    if !info.ports.isEmpty {
+                        effectivePorts[entry.pid, default: []].formUnion(info.ports)
+                    }
+                    if !info.args.isEmpty {
+                        descendantArgsByPid[entry.pid] = info.args
+                    }
+                }
+
+                // --- Step 3c: Remove child target processes whose parent is also a target ---
+                //
+                // When `bun dev` spawns `node .../next dev`, we don't want to show both.
+                // Keep the topmost target ancestor and remove the child.
+                // The parent already inherited the child's ports in step 3b.
+                //
+                // We need to walk up the full process tree (not just target entries)
+                // because the chain can go through non-target intermediaries:
+                //   bun(target) → sh(not target) → node(target)
+
+                let childTargetPids = Set(entries.compactMap { entry -> Int? in
+                    // Walk up the parent chain — if any ancestor is also a target, this
+                    // entry is a child that should be hidden (its parent shows its ports).
+                    var current = entry.ppid
+                    while current > 1 {
+                        if targetPids.contains(current) { return entry.pid }
+                        current = ppidOf[current] ?? 0
+                    }
+                    return nil
+                })
+
+                let filteredEntries = entries.filter { !childTargetPids.contains($0.pid) }
 
                 // --- Step 4: Combine everything into JSProcess objects ---
 
-                let found = entries.map { entry in
+                let found = filteredEntries.map { entry in
                     JSProcess(
                         id: entry.pid, pid: entry.pid, name: entry.name,
-                        args: entry.args, ports: portMap[entry.pid] ?? [],
+                        args: entry.args,
+                        descendantArgs: descendantArgsByPid[entry.pid] ?? [],
+                        ports: effectivePorts[entry.pid].map { $0.sorted() } ?? [],
                         uptime: entry.uptime
                     )
                 }
@@ -220,9 +320,9 @@ class ProcessManager: ObservableObject {
     /// Runs `lsof` to find all TCP ports currently in LISTEN state, then returns
     /// a dictionary mapping each PID to its sorted list of listening ports.
     ///
-    /// We run lsof once for ALL processes (not per-PID) to keep it fast.
-    private static func fetchListeningPorts(pids: [Int]) -> [Int: [UInt16]] {
-        guard !pids.isEmpty else { return [:] }
+    /// Returns ports for ALL listening processes (not filtered to specific PIDs)
+    /// so that child process ports can be propagated up to their target parents.
+    private static func fetchListeningPorts() -> [Int: [UInt16]] {
 
         let task = Process()
         task.executableURL = URL(fileURLWithPath: "/usr/sbin/lsof")
@@ -252,14 +352,12 @@ class ProcessManager: ObservableObject {
         //   n[::1]:3000      ← same port on IPv6
         //   p67890           ← next process
         //   n*:8080          ← listening on all interfaces, port 8080
-        let pidSet = Set(pids)
         var result: [Int: Set<UInt16>] = [:]  // Set to deduplicate (IPv4 + IPv6 same port)
         var currentPid: Int?
 
         for line in output.components(separatedBy: "\n") {
             if line.hasPrefix("p"), let pid = Int(line.dropFirst()) {
-                // New process section — only track it if it's one of ours.
-                currentPid = pidSet.contains(pid) ? pid : nil
+                currentPid = pid
             } else if line.hasPrefix("n"), let pid = currentPid {
                 // Network name line — extract the port number after the last ":".
                 if let colonIdx = line.lastIndex(of: ":"),

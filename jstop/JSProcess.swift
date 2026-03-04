@@ -10,6 +10,7 @@ struct JSProcess: Identifiable {
     let ports: [UInt16]  // TCP ports this process is listening on (from `lsof`)
     let uptime: TimeInterval  // seconds since process started (from `ps etime`)
     let shortPath: String // short project path, computed once at construction
+    let framework: String // detected framework (e.g. "Next.js", "Vite") or runtime name
 
     /// Formats uptime as a short human-readable string.
     /// e.g. "3s", "5m", "2h 15m", "1d 3h"
@@ -28,7 +29,7 @@ struct JSProcess: Identifiable {
 
     /// Creates a JSProcess, computing the short path from args at construction time
     /// so it doesn't need to be recalculated on every render.
-    init(id: Int, pid: Int, name: String, args: String, ports: [UInt16], uptime: TimeInterval) {
+    init(id: Int, pid: Int, name: String, args: String, descendantArgs: [String] = [], ports: [UInt16], uptime: TimeInterval) {
         self.id = id
         self.pid = pid
         self.name = name
@@ -36,6 +37,57 @@ struct JSProcess: Identifiable {
         self.ports = ports
         self.uptime = uptime
         self.shortPath = Self.extractShortPath(from: args)
+        // Try detecting framework from own args first, then from descendant args.
+        // This handles cases like `bun dev` spawning `node .../next dev` —
+        // "bun dev" alone doesn't mention Next.js, but the child's args do.
+        let allArgs = [args] + descendantArgs
+        self.framework = Self.detectFramework(from: allArgs, runtime: name)
+    }
+
+    /// Detects the framework/tool from the command line args (own + descendants).
+    /// Returns a human-friendly name like "Next.js" or "Vite", falling back
+    /// to the runtime name ("node", "bun", "deno") if nothing is recognized.
+    private static func detectFramework(from argsArray: [String], runtime: String) -> String {
+        // We match against args strings (own first, then children's).
+        // Order matters — more specific patterns first (e.g. "next" before "webpack").
+        // Patterns check for both direct invocation ("next dev") and
+        // node_modules paths (".bin/next", "node_modules/next/...").
+        let patterns: [(check: (String) -> Bool, label: String)] = [
+            ({ $0.contains("/next ") || $0.contains(".bin/next") || $0.contains("next dev") || $0.contains("next start") || $0.contains("next-server") },  "Next.js"),
+            ({ $0.contains("/vite ") || $0.contains(".bin/vite") || $0.contains("vite dev") || $0.contains("vite build") || $0.contains("vite preview") }, "Vite"),
+            ({ $0.contains("/nuxt ") || $0.contains(".bin/nuxt") || $0.contains("nuxt dev") || $0.contains("nuxt start") },                                "Nuxt"),
+            ({ $0.contains("/remix ") || $0.contains(".bin/remix") || $0.contains("remix dev") },                                                           "Remix"),
+            ({ $0.contains("/astro ") || $0.contains(".bin/astro") || $0.contains("astro dev") },                                                           "Astro"),
+            ({ $0.contains("/gatsby ") || $0.contains(".bin/gatsby") },                                                                                      "Gatsby"),
+            ({ $0.contains("/svelte-kit") || $0.contains(".bin/svelte-kit") },                                                                               "SvelteKit"),
+            ({ $0.contains("/angular") || $0.contains(".bin/ng ") || $0.contains("ng serve") },                                                             "Angular"),
+            ({ $0.contains("/expo ") || $0.contains(".bin/expo") || $0.contains("expo start") },                                                            "Expo"),
+            ({ $0.contains("/react-scripts") || $0.contains(".bin/react-scripts") },                                                                         "CRA"),
+            ({ $0.contains("/webpack ") || $0.contains(".bin/webpack") || $0.contains("webpack-dev-server") },                                               "Webpack"),
+            ({ $0.contains("/turbo ") || $0.contains(".bin/turbo") },                                                                                        "Turborepo"),
+            ({ $0.contains("/esbuild ") || $0.contains(".bin/esbuild") },                                                                                   "esbuild"),
+            ({ $0.contains("/tsx ") || $0.contains(".bin/tsx") },                                                                                            "tsx"),
+            ({ $0.contains("/ts-node") || $0.contains(".bin/ts-node") },                                                                                    "ts-node"),
+            ({ $0.contains("/nodemon") || $0.contains(".bin/nodemon") },                                                                                    "nodemon"),
+            ({ $0.contains("/express") },                                                                                                                    "Express"),
+            ({ $0.contains("/fastify") },                                                                                                                    "Fastify"),
+            ({ $0.contains("/nest ") || $0.contains(".bin/nest") || $0.contains("@nestjs") },                                                               "NestJS"),
+            ({ $0.contains("/playwright") },                                                                                                                 "Playwright"),
+            ({ $0.contains("/jest ") || $0.contains(".bin/jest") },                                                                                          "Jest"),
+            ({ $0.contains("/vitest") || $0.contains(".bin/vitest") },                                                                                       "Vitest"),
+            ({ $0.contains("/storybook") || $0.contains(".bin/storybook") || $0.contains("start-storybook") },                                              "Storybook"),
+            ({ $0.contains("/electron") || $0.contains(".bin/electron") },                                                                                   "Electron"),
+            ({ $0.contains("/wrangler") || $0.contains(".bin/wrangler") },                                                                                   "Wrangler"),
+        ]
+
+        // Check own args first, then descendant args — own args take priority.
+        for args in argsArray {
+            for (check, label) in patterns {
+                if check(args) { return label }
+            }
+        }
+
+        return runtime
     }
 
     /// Extracts a short, human-readable project path from the full command line args.
