@@ -1,0 +1,93 @@
+2026-03-04 20:35:58 +0000 [MT] Initial pipeline context: <IDEDistributionProcessingPipelineContext: 0xc48089e00; archive(resolved)="<IDEArchive: 0xc45c333a0>", distributionTask(resolved)="2", distributionDestination(resolved)="1", distributionMethod(resolved)="<IDEDistributionMethodDeveloperID: 0xc47507d30>", team(resolved)="<IDEProvisioningBasicTeam: 0xc480e16a0; teamID='7AWFJS2W5C', teamName='(null)'>">
+	Chain (12, self inclusive):
+	<IDEDistributionProcessingPipelineContext: 0xc48089e00; archive = "<IDEArchive: 0xc45c333a0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xc47507d30>", team="<IDEProvisioningBasicTeam: 0xc480e16a0; teamID='7AWFJS2W5C', teamName='(null)'>">
+	<IDEDistributionProcessingPipelineContext: 0xc48089b00; archive = "<IDEArchive: 0xc45c333a0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xc47507d30>", team="<IDEProvisioningBasicTeam: 0xc480e16a0; teamID='7AWFJS2W5C', teamName='(null)'>">
+	<IDEDistributionContext: 0xc480d1e00; archive = "<IDEArchive: 0xc45c333a0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xc47507d30>", team="<IDEProvisioningBasicTeam: 0xc480e16a0; teamID='7AWFJS2W5C', teamName='(null)'>">
+	<IDEDistributionContext: 0xc480d1b80; archive = "<IDEArchive: 0xc45c333a0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xc47507d30>", team="<IDEProvisioningBasicTeam: 0xc480e16a0; teamID='7AWFJS2W5C', teamName='(null)'>">
+	<IDEDistributionContext: 0xc480d1900; archive = "<IDEArchive: 0xc45c333a0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xc47507d30>", team="<IDEProvisioningBasicTeam: 0xc480e16a0; teamID='7AWFJS2W5C', teamName='(null)'>">
+	<IDEDistributionContext: 0xc480d1680; archive = "<IDEArchive: 0xc45c333a0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xc47507d30>", team="<IDEProvisioningBasicTeam: 0xc480e16a0; teamID='7AWFJS2W5C', teamName='(null)'>">
+	<IDEDistributionContext: 0xc480d0780; archive = "<IDEArchive: 0xc45c333a0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xc47507d30>", team="<IDEProvisioningBasicTeam: 0xc480e16a0; teamID='7AWFJS2W5C', teamName='(null)'>">
+	<IDEDistributionContext: 0xc480d0500; archive = "<IDEArchive: 0xc45c333a0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xc47507d30>", team="<IDEProvisioningBasicTeam: 0xc480e16a0; teamID='7AWFJS2W5C', teamName='(null)'>">
+	<IDEDistributionContext: 0xc480d0280; archive = "<IDEArchive: 0xc45c333a0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xc47507d30>", team="<IDEProvisioningBasicTeam: 0xc480e16a0; teamID='7AWFJS2W5C', teamName='(null)'>">
+	<IDEDistributionContext: 0xc480d0000; archive = "<IDEArchive: 0xc45c333a0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xc47507d30>", team="(null)">
+	<IDEDistributionContext: 0x102cf71d0; archive = "<IDEArchive: 0xc45c333a0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xc47507d30>", team="(null)">
+	<IDEDistributionContext: 0x102cf66d0; archive = "<IDEArchive: 0xc45c333a0>", distributionMethod="(null)", team="(null)">
+</IDEDistributionProcessingPipelineContext: 0xc48089e00>
+2026-03-04 20:35:58 +0000 [MT] Processing step: IDEDistributionCreateDestRootStep
+2026-03-04 20:35:58 +0000 [MT] Processing step: IDEDistributionCopyItemStep
+2026-03-04 20:35:58 +0000 [MT] Running /usr/bin/ditto '-V' '/Users/einargudjonsson/personal/node-processes/build/jstop.xcarchive/Products/Applications/jstop.app' '/var/folders/c0/yrf909y13m506j4byh_zpx0w0000gn/T/XcodeDistPipeline.~~~9iyqzQ/Root/Applications/jstop.app'
+2026-03-04 20:35:58 +0000  >>> Copying /Users/einargudjonsson/personal/node-processes/build/jstop.xcarchive/Products/Applications/jstop.app 
+2026-03-04 20:35:58 +0000  copying file ./Contents/_CodeSignature/CodeResources ... 
+2026-03-04 20:35:58 +0000  2200 bytes for ./Contents/_CodeSignature/CodeResources
+2026-03-04 20:35:58 +0000  copying file ./Contents/MacOS/jstop ... 
+2026-03-04 20:35:58 +0000  403408 bytes for ./Contents/MacOS/jstop
+2026-03-04 20:35:58 +0000  copying file ./Contents/Info.plist ... 
+2026-03-04 20:35:58 +0000  1347 bytes for ./Contents/Info.plist
+2026-03-04 20:35:58 +0000  copying file ./Contents/PkgInfo ... 
+2026-03-04 20:35:58 +0000  8 bytes for ./Contents/PkgInfo
+2026-03-04 20:35:58 +0000 [MT] /usr/bin/ditto exited with 0
+2026-03-04 20:35:58 +0000 [MT] Processing step: IDEDistributionEmbedProfileStep
+2026-03-04 20:35:58 +0000 [MT] Skipping profile for item: <IDEDistributionItem: 0xc45cd1980; bundleID='com.jstop.jstop', path='<DVTFilePath:0xc45c77ba0:'/Users/einargudjonsson/personal/node-processes/build/jstop.xcarchive/Products/Applications/jstop.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xc45cd17a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xc4778ac40; name='Developer ID Application: Einar Gudjonsson (7AWFJS2W5C)', hash='EBE33CFADD2731A7CACE1836E8979FA693D126E9', serialNumber='4761BA68A2D41B83', certificateKinds='(
+    "1.2.840.113635.100.6.1.13"
+), issueDate='2026-03-04 16:50:43 +0000''>', entitlements='{
+    "com.apple.security.app-sandbox" = 0;
+}', teamID='7AWFJS2W5C', identifier='com.jstop.jstop', executablePath='<DVTFilePath:0xc45cd1200:'/Users/einargudjonsson/personal/node-processes/build/jstop.xcarchive/Products/Applications/jstop.app/Contents/MacOS/jstop'>', hardenedRuntime='1'>'>
+2026-03-04 20:35:58 +0000 [MT] Processing step: IDEDistributionInfoPlistStep
+2026-03-04 20:35:58 +0000 [MT] Skipping step: IDEDistributionInfoPlistStep because it said so
+2026-03-04 20:35:58 +0000 [MT] Processing step: IDEDistributionAppThinningPlistStep
+2026-03-04 20:35:58 +0000 [MT] Processing step: IDEDistributionSymbolsStep
+2026-03-04 20:35:58 +0000 [MT] Skipping step: IDEDistributionSymbolsStep because it said so
+2026-03-04 20:35:58 +0000 [MT] Processing step: IDEDistributionAppThinningStep
+2026-03-04 20:35:58 +0000 [MT] Skipping step: IDEDistributionAppThinningStep because it said so
+2026-03-04 20:35:58 +0000 [MT] Processing step: IDEDistributionArchThinningStep
+2026-03-04 20:35:58 +0000 [MT] Archs to thin for item /Users/einargudjonsson/personal/node-processes/build/jstop.xcarchive/Products/Applications/jstop.app are []
+2026-03-04 20:35:58 +0000 [MT] Processing step: IDEDistributionODRStep
+2026-03-04 20:35:58 +0000 [MT] Processing step: IDEDistributionStripXattrsStep
+2026-03-04 20:35:58 +0000 [MT] Skipping stripping extended attributes because the codesign step will strip them.
+2026-03-04 20:35:58 +0000 [MT] Processing step: IDEDistributionCodesignStep
+2026-03-04 20:35:58 +0000 [MT] Entitlements for <IDEDistributionItem: 0xc45cd1980; bundleID='com.jstop.jstop', path='<DVTFilePath:0xc45c77ba0:'/Users/einargudjonsson/personal/node-processes/build/jstop.xcarchive/Products/Applications/jstop.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xc45cd17a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xc4778ac40; name='Developer ID Application: Einar Gudjonsson (7AWFJS2W5C)', hash='EBE33CFADD2731A7CACE1836E8979FA693D126E9', serialNumber='4761BA68A2D41B83', certificateKinds='(
+    "1.2.840.113635.100.6.1.13"
+), issueDate='2026-03-04 16:50:43 +0000''>', entitlements='{
+    "com.apple.security.app-sandbox" = 0;
+}', teamID='7AWFJS2W5C', identifier='com.jstop.jstop', executablePath='<DVTFilePath:0xc45cd1200:'/Users/einargudjonsson/personal/node-processes/build/jstop.xcarchive/Products/Applications/jstop.app/Contents/MacOS/jstop'>', hardenedRuntime='1'>'>: {
+    "com.apple.security.app-sandbox" = 0;
+}
+2026-03-04 20:35:58 +0000 [MT] Associated App Clip Identifiers Filter: Skipping because "com.apple.developer.associated-appclip-app-identifiers" is not present
+2026-03-04 20:35:58 +0000 [MT] Entitlements for <IDEDistributionItem: 0xc45cd1980; bundleID='com.jstop.jstop', path='<DVTFilePath:0xc45c77ba0:'/Users/einargudjonsson/personal/node-processes/build/jstop.xcarchive/Products/Applications/jstop.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xc45cd17a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xc4778bc00; name='Developer ID Application: Einar Gudjonsson (7AWFJS2W5C)', hash='EBE33CFADD2731A7CACE1836E8979FA693D126E9', serialNumber='4761BA68A2D41B83', certificateKinds='(
+    "1.2.840.113635.100.6.1.13"
+), issueDate='2026-03-04 16:50:43 +0000''>', entitlements='{
+    "com.apple.security.app-sandbox" = 0;
+}', teamID='7AWFJS2W5C', identifier='com.jstop.jstop', executablePath='<DVTFilePath:0xc45cd1200:'/Users/einargudjonsson/personal/node-processes/build/jstop.xcarchive/Products/Applications/jstop.app/Contents/MacOS/jstop'>', hardenedRuntime='1'>'> are: {
+    "com.apple.security.app-sandbox" = 0;
+}
+2026-03-04 20:35:58 +0000 [MT] Writing entitlements for <IDEDistributionItem: 0xc45cd1980; bundleID='com.jstop.jstop', path='<DVTFilePath:0xc45c77ba0:'/Users/einargudjonsson/personal/node-processes/build/jstop.xcarchive/Products/Applications/jstop.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xc45cd17a0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xc4778bc00; name='Developer ID Application: Einar Gudjonsson (7AWFJS2W5C)', hash='EBE33CFADD2731A7CACE1836E8979FA693D126E9', serialNumber='4761BA68A2D41B83', certificateKinds='(
+    "1.2.840.113635.100.6.1.13"
+), issueDate='2026-03-04 16:50:43 +0000''>', entitlements='{
+    "com.apple.security.app-sandbox" = 0;
+}', teamID='7AWFJS2W5C', identifier='com.jstop.jstop', executablePath='<DVTFilePath:0xc45cd1200:'/Users/einargudjonsson/personal/node-processes/build/jstop.xcarchive/Products/Applications/jstop.app/Contents/MacOS/jstop'>', hardenedRuntime='1'>'> to: /var/folders/c0/yrf909y13m506j4byh_zpx0w0000gn/T/XcodeDistPipeline.~~~9iyqzQ/entitlements~~~hpP6PA
+2026-03-04 20:35:58 +0000 [MT] invoking codesign: <NSConcreteTask: 0xc47814500; launchPath='/usr/bin/codesign', arguments='(
+    "-f",
+    "-s",
+    EBE33CFADD2731A7CACE1836E8979FA693D126E9,
+    "--entitlements",
+    "/var/folders/c0/yrf909y13m506j4byh_zpx0w0000gn/T/XcodeDistPipeline.~~~9iyqzQ/entitlements~~~hpP6PA",
+    "--requirements",
+    "=designated => anchor apple generic  and identifier \"$self.identifier\" and ((cert leaf[field.1.2.840.113635.100.6.1.9] exists) or ( certificate 1[field.1.2.840.113635.100.6.2.6] exists and certificate leaf[field.1.2.840.113635.100.6.1.13] exists  and certificate leaf[subject.OU] = \"7AWFJS2W5C\" ))",
+    "--preserve-metadata=identifier,flags,runtime,launch-constraints,library-constraints",
+    "--generate-entitlement-der",
+    "--strip-disallowed-xattrs",
+    "-vvv",
+    "/var/folders/c0/yrf909y13m506j4byh_zpx0w0000gn/T/XcodeDistPipeline.~~~9iyqzQ/Root/Applications/jstop.app"
+)'>
+2026-03-04 20:35:59 +0000 [MT] codesign output: /var/folders/c0/yrf909y13m506j4byh_zpx0w0000gn/T/XcodeDistPipeline.~~~9iyqzQ/Root/Applications/jstop.app: replacing existing signature
+/var/folders/c0/yrf909y13m506j4byh_zpx0w0000gn/T/XcodeDistPipeline.~~~9iyqzQ/Root/Applications/jstop.app: signed app bundle with Mach-O universal (x86_64 arm64) [com.jstop.jstop]
+2026-03-04 20:35:59 +0000 [MT] Processing step: IDEDistributionZipODRItemStep
+2026-03-04 20:35:59 +0000 [MT] Skipping step: IDEDistributionZipODRItemStep because it said so
+2026-03-04 20:35:59 +0000 [MT] Processing step: IDEDistributionSkipPackagingStep
+2026-03-04 20:35:59 +0000 [MT] Processing step: IDEDistributionAppStoreInformationStep
+2026-03-04 20:35:59 +0000 [MT] Skipping step: IDEDistributionAppStoreInformationStep because it said so
+2026-03-04 20:35:59 +0000 [MT] Processing step: IDEDistributionGenerateProcessedDistributionItems
+2026-03-04 20:35:59 +0000 [MT] IDEDistributionItem init <DVTFilePath:0xc45ebca80:'/var/folders/c0/yrf909y13m506j4byh_zpx0w0000gn/T/XcodeDistPipeline.~~~9iyqzQ/Root/Applications/jstop.app'>
+2026-03-04 20:35:59 +0000 [MT] [OPTIONAL] Didn't find embedded provisioning profile for <DVTFilePath:0xc45ebca80:'/var/folders/c0/yrf909y13m506j4byh_zpx0w0000gn/T/XcodeDistPipeline.~~~9iyqzQ/Root/Applications/jstop.app'>: Error Domain=NSCocoaErrorDomain Code=4 "No file at <DVTFilePath:0xc45f9c1c0:'/var/folders/c0/yrf909y13m506j4byh_zpx0w0000gn/T/XcodeDistPipeline.~~~9iyqzQ/Root/Applications/jstop.app/Contents/embedded.provisionprofile'>" UserInfo={NSLocalizedDescription=No file at <DVTFilePath:0xc45f9c1c0:'/var/folders/c0/yrf909y13m506j4byh_zpx0w0000gn/T/XcodeDistPipeline.~~~9iyqzQ/Root/Applications/jstop.app/Contents/embedded.provisionprofile'>}
+2026-03-04 20:35:59 +0000 [MT] Processing step: IDEDistributionCreateManifestStep
+2026-03-04 20:35:59 +0000 [MT] Skipping step: IDEDistributionCreateManifestStep because it said so
