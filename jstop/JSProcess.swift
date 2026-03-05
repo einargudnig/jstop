@@ -47,7 +47,7 @@ struct JSProcess: Identifiable {
     /// Detects the framework/tool from the command line args (own + descendants).
     /// Returns a human-friendly name like "Next.js" or "Vite", falling back
     /// to the runtime name ("node", "bun", "deno") if nothing is recognized.
-    private static func detectFramework(from argsArray: [String], runtime: String) -> String {
+    static func detectFramework(from argsArray: [String], runtime: String) -> String {
         // We match against args strings (own first, then children's).
         // Order matters — more specific patterns first (e.g. "next" before "webpack").
         // Patterns check for both direct invocation ("next dev") and
@@ -95,7 +95,7 @@ struct JSProcess: Identifiable {
     /// Examples:
     ///   "/Users/me/work/my-app/node_modules/.bin/vite dev" → "me/work/my-app"
     ///   "node /Users/me/.npm/_npx/.../playwright-mcp"      → ".npm/_npx/playwright-mcp"
-    private static func extractShortPath(from args: String) -> String {
+    static func extractShortPath(from args: String) -> String {
         // Split args into space-separated tokens and drop empty ones.
         // e.g. "/usr/bin/node /path/to/server.js --port 3000"
         //   → ["/usr/bin/node", "/path/to/server.js", "--port", "3000"]

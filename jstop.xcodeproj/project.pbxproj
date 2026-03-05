@@ -13,6 +13,7 @@
 		8C2475D6FAEDA1D2994B7F78 /* ProcessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D48EB1E8745E9439C87A24 /* ProcessManager.swift */; };
 		AD25431CDCB2AC70A83A07B1 /* JSProcess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5611E2A41F393B0C9D57DB82 /* JSProcess.swift */; };
 		B0DDA2A4FBA4D78B20B46C20 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C8C1A504188F50A1F24BF41E /* Assets.xcassets */; };
+		FA01000000000000000001AA /* jstopTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA01000000000000000002AA /* jstopTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +26,8 @@
 		C2D48EB1E8745E9439C87A24 /* ProcessManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessManager.swift; sourceTree = "<group>"; };
 		C8C1A504188F50A1F24BF41E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F4AF63027A733FFEF5C94E26 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		FA01000000000000000002AA /* jstopTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = jstopTests.swift; sourceTree = "<group>"; };
+		FA01000000000000000003AA /* jstopTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = jstopTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -47,6 +50,7 @@
 			isa = PBXGroup;
 			children = (
 				988F48A8F225B0F3988CF7CE /* jstop */,
+				FA01000000000000000004AA /* jstopTests */,
 				B29AA9ADC71E10140B76C4C3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -55,11 +59,38 @@
 			isa = PBXGroup;
 			children = (
 				9B6DFDDCB965E24CE22313B8 /* jstop.app */,
+				FA01000000000000000003AA /* jstopTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
+		FA01000000000000000004AA /* jstopTests */ = {
+			isa = PBXGroup;
+			children = (
+				FA01000000000000000002AA /* jstopTests.swift */,
+			);
+			path = jstopTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXContainerItemProxy section */
+		FA01000000000000000005AA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 626801D419CE6A1EC0C2E3F4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B82C7C7186C251FBA00C80F8;
+			remoteInfo = jstop;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+		FA01000000000000000006AA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B82C7C7186C251FBA00C80F8 /* jstop */;
+			targetProxy = FA01000000000000000005AA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXNativeTarget section */
 		B82C7C7186C251FBA00C80F8 /* jstop */ = {
@@ -80,6 +111,25 @@
 			productReference = 9B6DFDDCB965E24CE22313B8 /* jstop.app */;
 			productType = "com.apple.product-type.application";
 		};
+		FA01000000000000000007AA /* jstopTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FA01000000000000000010AA /* Build configuration list for PBXNativeTarget "jstopTests" */;
+			buildPhases = (
+				FA01000000000000000008AA /* Sources */,
+				FA01000000000000000009AA /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FA01000000000000000006AA /* PBXTargetDependency */,
+			);
+			name = jstopTests;
+			packageProductDependencies = (
+			);
+			productName = jstopTests;
+			productReference = FA01000000000000000003AA /* jstopTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -92,6 +142,9 @@
 					B82C7C7186C251FBA00C80F8 = {
 						DevelopmentTeam = 7AWFJS2W5C;
 						ProvisioningStyle = Manual;
+					};
+					FA01000000000000000007AA = {
+						TestTargetID = B82C7C7186C251FBA00C80F8;
 					};
 				};
 			};
@@ -110,6 +163,7 @@
 			projectRoot = "";
 			targets = (
 				B82C7C7186C251FBA00C80F8 /* jstop */,
+				FA01000000000000000007AA /* jstopTests */,
 			);
 		};
 /* End PBXProject section */
@@ -125,6 +179,16 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXFrameworksBuildPhase section */
+		FA01000000000000000009AA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		59E028A69E3BC9991C64430D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -135,6 +199,14 @@
 				8C2475D6FAEDA1D2994B7F78 /* ProcessManager.swift in Sources */,
 				2506153D00467F25D6614AF9 /* ProcessRowView.swift in Sources */,
 				58DE2B429D307C4A9D80AF57 /* jstopApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FA01000000000000000008AA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA01000000000000000001AA /* jstopTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,6 +372,32 @@
 			};
 			name = Release;
 		};
+		FA0100000000000000000BAA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jstop.jstopTests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.9;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/jstop.app/Contents/MacOS/jstop";
+			};
+			name = Debug;
+		};
+		FA0100000000000000000CAA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jstop.jstopTests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.9;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/jstop.app/Contents/MacOS/jstop";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -317,6 +415,15 @@
 			buildConfigurations = (
 				109EC00768372CEA8D4E1745 /* Debug */,
 				E9C109E8877A8709496975DE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FA01000000000000000010AA /* Build configuration list for PBXNativeTarget "jstopTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA0100000000000000000BAA /* Debug */,
+				FA0100000000000000000CAA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

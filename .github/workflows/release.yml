@@ -1,0 +1,45 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  release:
+    runs-on: macos-15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run tests
+        run: |
+          xcodebuild test \
+            -project jstop.xcodeproj \
+            -scheme jstop \
+            -destination 'platform=macOS' \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=NO
+
+      - name: Build release archive
+        run: |
+          xcodebuild archive \
+            -project jstop.xcodeproj \
+            -scheme jstop \
+            -configuration Release \
+            -archivePath build/jstop.xcarchive \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Export app
+        run: |
+          mkdir -p build/export
+          cp -R build/jstop.xcarchive/Products/Applications/jstop.app build/export/
+          cd build/export && zip -r ../../jstop.zip jstop.app
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: jstop.zip
+          generate_release_notes: true

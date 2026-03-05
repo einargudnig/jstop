@@ -283,7 +283,7 @@ class ProcessManager: ObservableObject {
     /// Extracts the last path component from a path string using simple string ops.
     /// e.g. "/usr/local/bin/node" → "node", "node" → "node"
     /// Avoids creating URL objects for every line of ps output.
-    private static func basename(_ path: String) -> String {
+    static func basename(_ path: String) -> String {
         if let lastSlash = path.lastIndex(of: "/") {
             return String(path[path.index(after: lastSlash)...])
         }
@@ -292,7 +292,7 @@ class ProcessManager: ObservableObject {
 
     /// Parses the `etime` field from `ps` into seconds.
     /// Format is [[DD-]HH:]MM:SS — e.g. "05:03", "1:23:45", "2-10:30:00".
-    private static func parseEtime(_ etime: String) -> TimeInterval {
+    static func parseEtime(_ etime: String) -> TimeInterval {
         // Split on "-" first to separate days: "2-10:30:00" → days=2, rest="10:30:00"
         let dayParts = etime.split(separator: "-", maxSplits: 1)
         let days: Int
