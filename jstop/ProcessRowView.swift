@@ -1,37 +1,33 @@
 import SwiftUI
 
-/// A single row in the process list, showing the runtime name, PID, ports,
-/// a short project path, and a kill button.
 struct ProcessRowView: View {
     let process: JSProcess
-    // @ObservedObject so we can call manager.kill() from the button.
     @ObservedObject var manager: ProcessManager
 
+    @State private var isHovering = false
+    @State private var isKilling = false
+
     var body: some View {
-        // Top-level horizontal layout: process info on the left, kill button on the right.
-        HStack(alignment: .top, spacing: 8) {
-            // Left side: stacked vertically — top row of badges, bottom row path.
-            VStack(alignment: .leading, spacing: 2) {
-                // Top row: runtime name + PID badge + port badges.
+        HStack(alignment: .center, spacing: 10) {
+            // Colored alive dot
+            Circle()
+                .fill(process.ports.isEmpty ? Color.secondary.opacity(0.4) : Color.green)
+                .frame(width: 7, height: 7)
+                .shadow(color: process.ports.isEmpty ? .clear : .green.opacity(0.5), radius: 4)
+
+            VStack(alignment: .leading, spacing: 4) {
+                // Top row: framework badge + PID + ports
                 HStack(spacing: 6) {
-                    // Framework or runtime name (e.g. "Next.js", "node").
+                    // Framework badge with brand color
                     Text(process.framework)
-                        .font(.system(.body, design: .monospaced))
+                        .font(.system(.callout, design: .rounded))
                         .fontWeight(.semibold)
+                        .foregroundColor(process.frameworkColor)
 
-                    // PID shown as a small grey pill/badge.
                     Text("PID \(process.pid)")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .padding(.horizontal, 5)
-                        .padding(.vertical, 1)
-                        .background(Color.secondary.opacity(0.12))
-                        .cornerRadius(3)
+                        .font(.system(.caption2, design: .monospaced))
+                        .foregroundColor(.secondary.opacity(0.7))
 
-                    // One blue badge per listening port.
-                    // Clicking a port badge opens http://localhost:PORT in the browser.
-                    // `verbatim:` prevents SwiftUI from applying locale number
-                    // formatting (e.g. "5.173" in Icelandic locale → "5173").
                     ForEach(process.ports, id: \.self) { port in
                         Button {
                             if let url = URL(string: "http://localhost:\(port)") {
@@ -40,46 +36,62 @@ struct ProcessRowView: View {
                         } label: {
                             Text(verbatim: ":\(port)")
                                 .font(.system(.caption, design: .monospaced))
+                                .fontWeight(.medium)
                                 .foregroundColor(.blue)
-                                .padding(.horizontal, 5)
-                                .padding(.vertical, 1)
-                                .background(Color.blue.opacity(0.10))
-                                .cornerRadius(3)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Color.blue.opacity(isHovering ? 0.18 : 0.10))
+                                .cornerRadius(4)
                         }
                         .buttonStyle(.plain)
-                        .help("Open http://localhost:\(port) in browser")
+                        .help("Open http://localhost:\(port)")
                     }
                 }
 
-                // Second row: short project path + uptime.
-                HStack(spacing: 4) {
+                // Bottom row: path + uptime
+                HStack(spacing: 0) {
                     Text(process.shortPath)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
                         .lineLimit(1)
                         .truncationMode(.middle)
-                    // Uptime shown as a subtle clock label (e.g. "2h 15m").
-                    Text("· \(process.uptimeString)")
-                        .font(.caption)
-                        .foregroundColor(.secondary.opacity(0.7))
+                    Text("  ·  \(process.uptimeString)")
+                        .foregroundColor(.secondary.opacity(0.5))
                 }
+                .font(.system(.caption, design: .monospaced))
+                .foregroundColor(.secondary.opacity(0.7))
             }
 
-            // Push the kill button to the right edge.
             Spacer(minLength: 4)
 
-            // Kill button — sends SIGTERM to gracefully stop the process.
+            // Kill button — appears more prominently on hover
             Button {
-                manager.kill(pid: process.pid)
+                withAnimation(.easeOut(duration: 0.3)) {
+                    isKilling = true
+                }
+                // Delay the actual kill so the animation plays
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                    manager.kill(pid: process.pid)
+                }
             } label: {
                 Image(systemName: "xmark.circle.fill")
                     .font(.system(size: 16))
-                    .foregroundColor(.red.opacity(0.75))
+                    .foregroundColor(.red.opacity(isHovering ? 0.9 : 0.4))
+                    .scaleEffect(isHovering ? 1.0 : 0.85)
             }
-            .buttonStyle(.plain) // Remove default button chrome.
-            .help("Kill process \(process.pid)") // Tooltip on hover.
+            .buttonStyle(.plain)
+            .help("Kill process \(process.pid)")
+            .animation(.easeOut(duration: 0.15), value: isHovering)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
+        .background(
+            RoundedRectangle(cornerRadius: 6)
+                .fill(isKilling ? Color.red.opacity(0.12) :
+                      isHovering ? Color.primary.opacity(0.04) : Color.clear)
+        )
+        .opacity(isKilling ? 0 : 1)
+        .offset(x: isKilling ? 60 : 0)
+        .onHover { hovering in
+            isHovering = hovering
+        }
     }
 }

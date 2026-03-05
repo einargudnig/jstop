@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 /// Represents a single running JavaScript runtime process (node, bun, or deno).
 /// Conforms to `Identifiable` so SwiftUI's `ForEach` can efficiently diff the list.
@@ -11,6 +12,32 @@ struct JSProcess: Identifiable {
     let uptime: TimeInterval  // seconds since process started (from `ps etime`)
     let shortPath: String // short project path, computed once at construction
     let framework: String // detected framework (e.g. "Next.js", "Vite") or runtime name
+
+    /// Brand color for the detected framework, used for the framework badge.
+    var frameworkColor: Color {
+        switch framework {
+        case "Next.js":     return Color(.sRGB, red: 0.95, green: 0.95, blue: 0.95, opacity: 1) // white-ish
+        case "Vite":        return Color(.sRGB, red: 0.55, green: 0.36, blue: 1.0, opacity: 1)  // purple
+        case "Nuxt":        return Color(.sRGB, red: 0.0, green: 0.85, blue: 0.52, opacity: 1)  // green
+        case "Remix":       return Color(.sRGB, red: 0.35, green: 0.55, blue: 1.0, opacity: 1)  // blue
+        case "Astro":       return Color(.sRGB, red: 1.0, green: 0.36, blue: 0.24, opacity: 1)  // orange-red
+        case "SvelteKit":   return Color(.sRGB, red: 1.0, green: 0.24, blue: 0.0, opacity: 1)   // svelte orange
+        case "Angular":     return Color(.sRGB, red: 0.87, green: 0.16, blue: 0.24, opacity: 1) // red
+        case "Gatsby":      return Color(.sRGB, red: 0.4, green: 0.2, blue: 0.8, opacity: 1)    // purple
+        case "Expo":        return Color(.sRGB, red: 0.33, green: 0.33, blue: 0.33, opacity: 1) // dark gray
+        case "Express":     return Color(.sRGB, red: 0.93, green: 0.82, blue: 0.0, opacity: 1)  // yellow
+        case "Fastify":     return Color(.sRGB, red: 0.95, green: 0.95, blue: 0.95, opacity: 1) // white
+        case "NestJS":      return Color(.sRGB, red: 0.88, green: 0.15, blue: 0.27, opacity: 1) // red
+        case "Storybook":   return Color(.sRGB, red: 1.0, green: 0.28, blue: 0.52, opacity: 1)  // pink
+        case "Electron":    return Color(.sRGB, red: 0.18, green: 0.8, blue: 0.82, opacity: 1)  // teal
+        case "Wrangler":    return Color(.sRGB, red: 0.97, green: 0.65, blue: 0.14, opacity: 1) // cloudflare orange
+        case "Vitest":      return Color(.sRGB, red: 0.45, green: 0.82, blue: 0.09, opacity: 1) // green
+        case "Jest":        return Color(.sRGB, red: 0.6, green: 0.2, blue: 0.15, opacity: 1)   // brown-red
+        case "Webpack":     return Color(.sRGB, red: 0.55, green: 0.78, blue: 0.93, opacity: 1) // light blue
+        case "Turborepo":   return Color(.sRGB, red: 0.94, green: 0.28, blue: 0.52, opacity: 1) // pink
+        default:            return Color(.sRGB, red: 0.45, green: 0.65, blue: 1.0, opacity: 1)  // default blue
+        }
+    }
 
     /// Formats uptime as a short human-readable string.
     /// e.g. "3s", "5m", "2h 15m", "1d 3h"

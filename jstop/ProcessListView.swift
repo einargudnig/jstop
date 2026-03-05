@@ -1,16 +1,10 @@
 import SwiftUI
 
-/// The main content view shown when the menu bar icon is clicked.
-/// Splits processes into "Dev Servers" (with listening ports) and
-/// "Background" (tooling, MCP servers, etc.) which is collapsed by default.
 struct ProcessListView: View {
     @ObservedObject var manager: ProcessManager
 
-    // Whether the "Background" section is expanded. Collapsed by default
-    // so dev servers are front and center.
     @State private var showBackground = false
 
-    // Split processes into two groups based on whether they have listening ports.
     private var devServers: [JSProcess] {
         manager.processes.filter { !$0.ports.isEmpty }
     }
@@ -23,129 +17,127 @@ struct ProcessListView: View {
             // ---- Header ----
             HStack {
                 Text("jstop")
-                    .font(.headline)
+                    .font(.system(.headline, design: .rounded))
+                    .fontWeight(.bold)
                 Spacer()
                 if !manager.processes.isEmpty {
-                    Text("\(manager.processes.count)")
-                        .font(.caption)
+                    Text("\(manager.processes.count) process\(manager.processes.count == 1 ? "" : "es")")
+                        .font(.system(.caption2, design: .rounded))
                         .foregroundColor(.secondary)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(Color.secondary.opacity(0.15))
-                        .cornerRadius(4)
                 }
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
 
-            Divider()
+            Divider().opacity(0.5)
 
             if manager.processes.isEmpty {
                 // ---- Empty state ----
-                VStack(spacing: 6) {
+                VStack(spacing: 8) {
                     Image(systemName: "checkmark.circle")
-                        .font(.system(size: 28))
+                        .font(.system(size: 32, weight: .light))
+                        .foregroundColor(.green.opacity(0.6))
+                    Text("All clear")
+                        .font(.system(.callout, design: .rounded))
+                        .fontWeight(.medium)
                         .foregroundColor(.secondary)
                     Text("No JS processes running")
-                        .foregroundColor(.secondary)
-                        .font(.callout)
+                        .font(.caption)
+                        .foregroundColor(.secondary.opacity(0.6))
                 }
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 24)
+                .padding(.vertical, 28)
             } else {
                 ScrollView {
                     LazyVStack(spacing: 0) {
-                        // ---- Dev Servers section ----
-                        // Processes with listening ports — the ones you actually care about.
+                        // ---- Dev Servers ----
                         if !devServers.isEmpty {
-                            sectionHeader("Dev Servers", count: devServers.count)
+                            sectionHeader("Dev Servers", count: devServers.count, color: .green)
                             ForEach(devServers) { process in
                                 ProcessRowView(process: process, manager: manager)
-                                Divider().padding(.leading, 12)
                             }
                         }
 
-                        // ---- Background section ----
-                        // Tooling processes (MCP servers, language servers, etc.)
-                        // collapsed by default to reduce noise.
+                        // ---- Background ----
                         if !backgroundProcesses.isEmpty {
-                            // Clickable header toggles the section open/closed.
                             Button {
-                                withAnimation(.easeInOut(duration: 0.15)) {
+                                withAnimation(.easeInOut(duration: 0.2)) {
                                     showBackground.toggle()
                                 }
                             } label: {
-                                HStack(spacing: 4) {
-                                    // Chevron rotates to indicate open/closed state.
+                                HStack(spacing: 5) {
                                     Image(systemName: "chevron.right")
-                                        .font(.caption2)
+                                        .font(.system(size: 9, weight: .bold))
                                         .rotationEffect(.degrees(showBackground ? 90 : 0))
                                     Text("Background")
-                                        .font(.subheadline)
+                                        .font(.system(.caption, design: .rounded))
                                         .fontWeight(.medium)
                                     Text(verbatim: "\(backgroundProcesses.count)")
-                                        .font(.caption2)
-                                        .foregroundColor(.secondary)
+                                        .font(.system(.caption2, design: .monospaced))
+                                        .foregroundColor(.secondary.opacity(0.6))
                                         .padding(.horizontal, 5)
                                         .padding(.vertical, 1)
-                                        .background(Color.secondary.opacity(0.12))
+                                        .background(Color.secondary.opacity(0.08))
                                         .cornerRadius(3)
                                     Spacer()
                                 }
-                                .foregroundColor(.secondary)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 6)
+                                .foregroundColor(.secondary.opacity(0.7))
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 8)
                             }
                             .buttonStyle(.plain)
 
                             if showBackground {
                                 ForEach(backgroundProcesses) { process in
                                     ProcessRowView(process: process, manager: manager)
-                                    Divider().padding(.leading, 12)
+                                        .transition(.move(edge: .top).combined(with: .opacity))
                                 }
                             }
                         }
                     }
+                    .padding(.vertical, 4)
                 }
                 .frame(maxHeight: 400)
             }
 
-            Divider()
+            Divider().opacity(0.5)
 
-            // ---- Quit button ----
-            Button("Quit jstop") {
+            // ---- Quit ----
+            Button {
                 NSApplication.shared.terminate(nil)
+            } label: {
+                Text("Quit jstop")
+                    .font(.system(.caption, design: .rounded))
+                    .foregroundColor(.secondary.opacity(0.6))
+                    .frame(maxWidth: .infinity, alignment: .center)
             }
             .buttonStyle(.plain)
-            .foregroundColor(.secondary)
-            .padding(.horizontal, 12)
             .padding(.vertical, 8)
         }
-        .frame(width: 320)
-        // When the popover appears/disappears, toggle the polling speed.
-        // onAppear fires when the user clicks the menu bar icon (popover opens).
-        // onDisappear fires when the popover closes.
+        .frame(width: 340)
         .onAppear { manager.isActive = true }
         .onDisappear { manager.isActive = false }
     }
 
-    /// A small section header with a label and count badge.
-    private func sectionHeader(_ title: String, count: Int) -> some View {
-        HStack(spacing: 4) {
+    private func sectionHeader(_ title: String, count: Int, color: Color) -> some View {
+        HStack(spacing: 5) {
+            Circle()
+                .fill(color.opacity(0.6))
+                .frame(width: 5, height: 5)
             Text(title)
-                .font(.subheadline)
+                .font(.system(.caption, design: .rounded))
                 .fontWeight(.medium)
             Text(verbatim: "\(count)")
-                .font(.caption2)
-                .foregroundColor(.secondary)
+                .font(.system(.caption2, design: .monospaced))
+                .foregroundColor(.secondary.opacity(0.6))
                 .padding(.horizontal, 5)
                 .padding(.vertical, 1)
-                .background(Color.secondary.opacity(0.12))
+                .background(Color.secondary.opacity(0.08))
                 .cornerRadius(3)
             Spacer()
         }
-        .foregroundColor(.secondary)
-        .padding(.horizontal, 12)
+        .foregroundColor(.secondary.opacity(0.7))
+        .padding(.horizontal, 14)
         .padding(.vertical, 6)
     }
 }
