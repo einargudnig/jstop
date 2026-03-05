@@ -2,7 +2,7 @@
 
 A native macOS menu bar app that shows all running JavaScript runtime processes (Node.js, Bun, Deno) at a glance. Kill any process or open a detected local dev server in the browser — without touching Activity Monitor or a terminal.
 
-https://github.com/einargudnig/jstop/raw/refs/heads/master/video/out/jstop-showcase.mp4
+![jstop showcase](video/out/jstop-showcase.gif)
 
 ## Features
 
