@@ -27,6 +27,22 @@ Open `jstop.xcodeproj` in Xcode and build/run, or from the command line:
 xcodebuild -project jstop.xcodeproj -scheme jstop build
 ```
 
+## Showcase Video
+
+A [Remotion](https://www.remotion.dev/)-powered showcase video lives in the `video/` directory.
+
+```sh
+cd video && npm install
+
+# Preview in Remotion Studio
+npm run studio
+
+# Render to MP4
+npm run render
+```
+
+Output: `video/out/jstop-showcase.mp4`
+
 ## Architecture
 
 ```
