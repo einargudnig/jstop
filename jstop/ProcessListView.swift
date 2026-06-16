@@ -5,6 +5,15 @@ struct ProcessListView: View {
 
     @State private var showBackground = false
 
+    /// Measured natural height of the scrollable content. A ScrollView does not
+    /// size itself to its content along the scroll axis — it waits for the parent
+    /// to propose a height. Inside a self-sizing `MenuBarExtra(.window)` there is
+    /// no leftover space to propose, so the ScrollView collapses to zero height.
+    /// We measure the content and pin the frame to it (capped) so the popover
+    /// grows with the list and only scrolls once it exceeds `maxContentHeight`.
+    @State private var contentHeight: CGFloat = 0
+    private let maxContentHeight: CGFloat = 400
+
     private var devServers: [JSProcess] {
         manager.processes.filter { !$0.ports.isEmpty }
     }
@@ -49,7 +58,7 @@ struct ProcessListView: View {
                 .padding(.vertical, 28)
             } else {
                 ScrollView {
-                    LazyVStack(spacing: 0) {
+                    VStack(spacing: 0) {
                         // ---- Dev Servers ----
                         if !devServers.isEmpty {
                             sectionHeader("Dev Servers", count: devServers.count, color: .green)
@@ -96,8 +105,17 @@ struct ProcessListView: View {
                         }
                     }
                     .padding(.vertical, 4)
+                    .background(
+                        GeometryReader { geo in
+                            Color.clear.preference(
+                                key: ContentHeightKey.self,
+                                value: geo.size.height
+                            )
+                        }
+                    )
                 }
-                .frame(maxHeight: 400)
+                .frame(height: min(contentHeight, maxContentHeight))
+                .onPreferenceChange(ContentHeightKey.self) { contentHeight = $0 }
             }
 
             Divider().opacity(0.5)
@@ -139,5 +157,15 @@ struct ProcessListView: View {
         .foregroundColor(.secondary.opacity(0.7))
         .padding(.horizontal, 14)
         .padding(.vertical, 6)
+    }
+}
+
+/// Carries the measured natural height of the scroll content up to the parent,
+/// so the ScrollView can be given a concrete frame instead of collapsing to zero
+/// inside the self-sizing menu bar popover.
+private struct ContentHeightKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
     }
 }
