@@ -29,6 +29,16 @@ Open `jstop.xcodeproj` in Xcode and build/run, or from the command line:
 xcodebuild -project jstop.xcodeproj -scheme jstop build
 ```
 
+## Installing
+
+To build a Release and install it into `/Applications` in one step, use the
+install script. It quits any running copy, replaces the installed app, and
+relaunches it — so the installed app never drifts behind the source:
+
+```sh
+./scripts/install.sh
+```
+
 ## Showcase Video
 
 A [Remotion](https://www.remotion.dev/)-powered showcase video lives in the `video/` directory.
