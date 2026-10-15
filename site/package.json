@@ -1,0 +1,21 @@
+{
+  "name": "jstop-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --hot ./index.html",
+    "build": "rm -rf dist && bun build ./index.html --outdir=dist --production && cp -R public/. dist/",
+    "typecheck": "tsc --noEmit",
+    "deploy": "bun run build && wrangler pages deploy dist --project-name jstop --branch master"
+  },
+  "dependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "typescript": "^7.0.2"
+  }
+}
