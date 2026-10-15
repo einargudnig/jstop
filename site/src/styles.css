@@ -109,6 +109,8 @@ h1 em { font-style: italic; color: var(--accent); }
 }
 .link:hover { border-color: var(--ink); }
 .fine { margin-top: 16px; font-size: 0.8125rem; color: var(--ink-2); }
+.fine a { color: var(--ink); text-underline-offset: 3px; text-decoration-color: var(--rule); }
+.fine a:hover { text-decoration-color: currentColor; }
 
 /* ---------- popover replica ---------- */
 .stage { position: relative; display: flex; justify-content: center; }
@@ -283,6 +285,7 @@ footer {
   font-size: 0.8125rem; color: var(--ink-2);
 }
 footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+.footer-links { display: flex; gap: 20px; }
 
 /* ---------- load choreography ---------- */
 .rise { animation: rise 0.8s var(--ease-out) both; }

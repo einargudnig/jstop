@@ -1,5 +1,7 @@
 export const REPO_URL = "https://github.com/einargudnig/jstop";
 export const DMG_URL = `${REPO_URL}/releases/latest/download/jstop.dmg`;
+export const SITE_URL = "https://einargudni.com";
+export const POST_URL = `${SITE_URL}/blog/personal-software-jstop`;
 
 export type DemoProcess = {
   pid: number;

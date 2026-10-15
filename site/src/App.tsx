@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BACKGROUND_COUNT, DEV_SERVERS, DMG_URL, REPO_URL } from "./data";
+import { BACKGROUND_COUNT, DEV_SERVERS, DMG_URL, POST_URL, REPO_URL, SITE_URL } from "./data";
 import { DownloadButton } from "./components/DownloadButton";
 import { Features } from "./components/Features";
 import { Install } from "./components/Install";
@@ -39,7 +39,9 @@ export const App = () => {
                 View source on GitHub
               </a>
             </div>
-            <p className="fine rise">Free and open source · macOS 13 or later</p>
+            <p className="fine rise">
+              Free and open source · macOS 13 or later · <a href={POST_URL}>Why I built it</a>
+            </p>
           </div>
 
           <div className="stage">
@@ -67,9 +69,12 @@ export const App = () => {
       <footer>
         <div className="wrap">
           <span>
-            MIT licensed · made by <a href="https://github.com/einargudnig">einargudnig</a>
+            MIT licensed · made by <a href={SITE_URL}>Einar Gudni</a>
           </span>
-          <a href={`${REPO_URL}/releases`}>Release notes</a>
+          <span className="footer-links">
+            <a href={POST_URL}>The write-up</a>
+            <a href={`${REPO_URL}/releases`}>Release notes</a>
+          </span>
         </div>
       </footer>
     </>
